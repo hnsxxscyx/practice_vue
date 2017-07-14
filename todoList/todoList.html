@@ -29,6 +29,16 @@
             border: 2px solid #eee;
             margin-right: 10px;
         }
+        
+        .item-delete {
+            border: none;
+            float: right;
+            display: none;
+        }
+        
+        ul>li:hover .item-delete {
+            display: inline-block;
+        }
     </style>
 </head>
 
@@ -44,6 +54,7 @@
                 <li v-for='item in tasks' v-show="visible==='all'?true:visible==='active'?!item.completed:item.completed">
                     <input type="checkbox" v-model='item.completed'>
                     <label v-bind:class="{'item-done':item.completed}">{{item.value}}</label>
+                    <button class="item-delete" @click='deleteItem(item.id)'>X</button>
                 </li>
             </ul>
             <div class="option">
@@ -74,17 +85,34 @@
                         if (value) {
                             this.tasks.push({
                                 value: value,
-                                completed: false
+                                completed: false,
+                                id: this.tasks.length + 1
                             })
                         }
                         this.mission = ''
+                    },
+                    deleteItem: function(id) {
+                        let tasks = this.tasks
+                        for (let i = 0; i < tasks.length; i++) {
+                            if (tasks[i].id === id) {
+                                tasks.splice(i, 1)
+                                break
+                            }
+                        }
+                        tasks.forEach(function(currentValue, index) {
+                            if (!currentValue.id === index) {
+                                currentValue.id = index
+                            }
+                            console.log(currentValue.id)
+                        })
+
                     }
                 },
                 watch: {
-                    mission: function() {
-                        console.log(this.mission)
-                        console.log(this.tasks)
-                    },
+                    // mission: function() {
+                    //     console.log(this.mission)
+                    //     console.log(this.tasks)
+                    // },
                     itemShow: function() {
                         console.log(this.itemShow)
                         console.log(this.visible)

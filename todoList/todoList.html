@@ -6,6 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+    <style>
+        ul {
+            padding: 0;
+        }
+        
+        li {
+            list-style: none;
+        }
+        
+        .item-done {
+            text-decoration: line-through;
+            color: #ccc;
+        }
+        
+        .option>input {
+            display: none;
+        }
+        
+        .option>label {
+            display: inline-block;
+            border: 2px solid #eee;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -16,8 +40,17 @@
         <section>
             <input type="text" placeholder="Please type your mission" v-model='mission' @keyup.13="addTodo">
             <ul>
-                <li v-for='item in tasks'>{{item.value}}</li>
+                <!--v-show逻辑太过复杂，或许应该使用计算属性-->
+                <li v-for='item in tasks' v-show="visible==='all'?true:visible==='active'?!item.completed:item.completed">
+                    <input type="checkbox" v-model='item.completed'>
+                    <label v-bind:class="{'item-done':item.completed}">{{item.value}}</label>
+                </li>
             </ul>
+            <div class="option">
+                <input type="radio" name="item-change" id="item-all" value="all" v-model='itemShow'><label for="item-all">All</label>
+                <input type="radio" name="item-change" id="item-active" value="active" v-model='itemShow'><label for="item-active">Active</label>
+                <input type="radio" name="item-change" id="item-completed" value="completed" v-model='itemShow'><label for="item-completed">Completed</label>
+            </div>
         </section>
         <footer>
             <p>By 不得不错</p>
@@ -31,14 +64,19 @@
                 data: {
                     title: 'TodoList',
                     mission: '',
+                    visible: 'all',
+                    itemShow: '',
                     tasks: []
                 },
                 methods: {
                     addTodo: function() {
-                        this.tasks.push({
-                            value: this.mission,
-                            completed: false
-                        })
+                        let value = this.mission
+                        if (value) {
+                            this.tasks.push({
+                                value: value,
+                                completed: false
+                            })
+                        }
                         this.mission = ''
                     }
                 },
@@ -46,8 +84,17 @@
                     mission: function() {
                         console.log(this.mission)
                         console.log(this.tasks)
+                    },
+                    itemShow: function() {
+                        console.log(this.itemShow)
+                        console.log(this.visible)
+                            // 此处也应使用计算属性替代，可减少代码量
+                        this.visible = this.itemShow
                     }
                 },
+                filters: {
+
+                }
             })
         }()
     </script>

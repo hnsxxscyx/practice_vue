@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <section id='vue-app'>
+        <header>
+            <h1>{{title}}</h1>
+        </header>
+        <section>
+            <input type="text" placeholder="Please type your mission" v-model='mission' @keyup.13="addTodo">
+            <ul>
+                <li v-for='item in tasks'>{{item.value}}</li>
+            </ul>
+        </section>
+        <footer>
+            <p>By 不得不错</p>
+        </footer>
+    </section>
+    <script src="https://cdn.bootcss.com/vue/2.3.4/vue.js"></script>
+    <script>
+        + function() {
+            var app = new Vue({
+                el: '#vue-app',
+                data: {
+                    title: 'TodoList',
+                    mission: '',
+                    tasks: []
+                },
+                methods: {
+                    addTodo: function() {
+                        this.tasks.push({
+                            value: this.mission,
+                            completed: false
+                        })
+                        this.mission = ''
+                    }
+                },
+                watch: {
+                    mission: function() {
+                        console.log(this.mission)
+                        console.log(this.tasks)
+                    }
+                },
+            })
+        }()
+    </script>
+</body>
+
+</html>
